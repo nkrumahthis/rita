@@ -1,12 +1,13 @@
 'use client'
 
 import React, { useState, useRef } from 'react';
-import { transcribe } from './action';
+import { transcribe, findBibleVerses } from './action';
 
 const VoiceRecorder: React.FC = () => {
   const [isRecording, setIsRecording] = useState(false);
   const [audioURL, setAudioURL] = useState<string | null>(null);
   const [transcription, setTranscription] = useState<string | null>(null);
+  const [bibleVerses, setBibleVerses] = useState<string | null>(null);
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const audioChunksRef = useRef<Blob[]>([]);
 
@@ -25,10 +26,17 @@ const VoiceRecorder: React.FC = () => {
         audioChunksRef.current = [];
 
         // Send audio to API for transcription
-
         const result = await transcribe(audioBlob);
         if (result) {
           setTranscription(result);
+
+          // Find Bible verses related to the transcription
+          const verses = await findBibleVerses(result);
+          if (verses) {
+            setBibleVerses(verses);
+          } else {
+            console.error('Failed to find related Bible verses');
+          }
         } else {
           console.error('Transcription failed');
         }
@@ -78,6 +86,12 @@ const VoiceRecorder: React.FC = () => {
         <div>
           <h2>Transcription:</h2>
           <p>{transcription}</p>
+        </div>
+      )}
+      {bibleVerses && (
+        <div>
+          <h2>Related Bible Verses:</h2>
+          <p>{bibleVerses}</p>
         </div>
       )}
     </div>
