@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 
 interface RecorderControlsProps {
   isRecording: boolean;
@@ -11,6 +11,33 @@ const RecorderControls: React.FC<RecorderControlsProps> = ({
   startRecording,
   stopRecording,
 }) => {
+    useEffect(() => {
+        const handleKeyDown = (event: KeyboardEvent) => {
+            if (event.code === 'Space') {
+                event.preventDefault();
+                if (!isRecording) {
+                    startRecording();
+                }
+            }
+        };
+
+        const handleKeyUp = (event: KeyboardEvent) => {
+            if (event.code === 'Space') {
+                event.preventDefault();
+                if (isRecording) {
+                    stopRecording();
+                }
+            }
+        };
+
+        window.addEventListener('keydown', handleKeyDown);
+        window.addEventListener('keyup', handleKeyUp);
+        return () => {
+            window.removeEventListener('keydown', handleKeyDown);
+            window.removeEventListener('keyup', handleKeyUp);
+        };
+    }, [isRecording, startRecording, stopRecording]);
+
   return (
     <div className="flex justify-center">
       <button
