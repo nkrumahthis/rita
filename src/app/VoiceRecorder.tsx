@@ -1,10 +1,12 @@
 'use client'
 
 import React, { useState, useRef } from 'react';
+import { transcribe } from './action';
 
 const VoiceRecorder: React.FC = () => {
   const [isRecording, setIsRecording] = useState(false);
   const [audioURL, setAudioURL] = useState<string | null>(null);
+  const [transcription, setTranscription] = useState<string | null>(null);
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const audioChunksRef = useRef<Blob[]>([]);
 
@@ -17,10 +19,19 @@ const VoiceRecorder: React.FC = () => {
         audioChunksRef.current.push(event.data);
       };
 
-      mediaRecorder.onstop = () => {
+      mediaRecorder.onstop = async () => {
         const audioBlob = new Blob(audioChunksRef.current, { type: 'audio/wav' });
         setAudioURL(URL.createObjectURL(audioBlob));
         audioChunksRef.current = [];
+
+        // Send audio to API for transcription
+
+        const result = await transcribe(audioBlob);
+        if (result) {
+          setTranscription(result);
+        } else {
+          console.error('Transcription failed');
+        }
       };
 
       mediaRecorder.start();
@@ -61,6 +72,12 @@ const VoiceRecorder: React.FC = () => {
         <div>
           <h2>Recording:</h2>
           <audio controls src={audioURL}></audio>
+        </div>
+      )}
+      {transcription && (
+        <div>
+          <h2>Transcription:</h2>
+          <p>{transcription}</p>
         </div>
       )}
     </div>
