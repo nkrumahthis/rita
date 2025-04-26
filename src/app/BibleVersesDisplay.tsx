@@ -6,8 +6,8 @@ interface BibleVersesDisplayProps {
 
 const BibleVersesDisplay: React.FC<BibleVersesDisplayProps> = ({ bibleVerses }) => {
   return (
-    <div>
-      <h2>Related Bible Verses:</h2>
+    <div className="flex flex-col items-center justify-center p-4 space-y-4">
+      <h2 className='text-lg font-bold text-center'>Related Bible Verses:</h2>
       <p>{bibleVerses}</p>
     </div>
   );
