@@ -2,8 +2,12 @@
 
 import React, { useState, useRef } from 'react';
 import { transcribe, findBibleVerses } from './action';
+import RecorderControls from './RecorderControls';
+import AudioPlayer from './AudioPlayer';
+import TranscriptionDisplay from './TranscriptionDisplay';
+import BibleVersesDisplay from './BibleVersesDisplay';
 
-const VoiceRecorder: React.FC = () => {
+const InformationAssistant: React.FC = () => {
   const [isRecording, setIsRecording] = useState(false);
   const [audioURL, setAudioURL] = useState<string | null>(null);
   const [transcription, setTranscription] = useState<string | null>(null);
@@ -25,12 +29,9 @@ const VoiceRecorder: React.FC = () => {
         setAudioURL(URL.createObjectURL(audioBlob));
         audioChunksRef.current = [];
 
-        // Send audio to API for transcription
         const result = await transcribe(audioBlob);
         if (result) {
           setTranscription(result);
-
-          // Find Bible verses related to the transcription
           const verses = await findBibleVerses(result);
           if (verses) {
             setBibleVerses(verses);
@@ -59,43 +60,16 @@ const VoiceRecorder: React.FC = () => {
 
   return (
     <div>
-      <h1>Voice Recorder</h1>
-      <button
-        className="px-4 py-2 rounded-full bg-red-500 hover:bg-red-600 text-white font-semibold transition-colors duration-200 flex items-center gap-2"
-        onClick={isRecording ? stopRecording : startRecording}
-      >
-        {isRecording ? (
-          <>
-            <span className="inline-block w-3 h-3 bg-white rounded-sm"></span>
-            Stop Recording
-          </>
-        ) : (
-          <>
-            <span className="inline-block w-3 h-3 bg-white rounded-full animate-pulse"></span>
-            Start Recording
-          </>
-        )}
-      </button>
-      {audioURL && (
-        <div>
-          <h2>Recording:</h2>
-          <audio controls src={audioURL}></audio>
-        </div>
-      )}
-      {transcription && (
-        <div>
-          <h2>Transcription:</h2>
-          <p>{transcription}</p>
-        </div>
-      )}
-      {bibleVerses && (
-        <div>
-          <h2>Related Bible Verses:</h2>
-          <p>{bibleVerses}</p>
-        </div>
-      )}
+      <RecorderControls
+        isRecording={isRecording}
+        startRecording={startRecording}
+        stopRecording={stopRecording}
+      />
+      {audioURL && <AudioPlayer audioURL={audioURL} />}
+      {transcription && <TranscriptionDisplay transcription={transcription} />}
+      {bibleVerses && <BibleVersesDisplay bibleVerses={bibleVerses} />}
     </div>
   );
 };
 
-export default VoiceRecorder;
+export default InformationAssistant;
