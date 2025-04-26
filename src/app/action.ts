@@ -60,7 +60,7 @@ export async function findBibleVerses(text: string) {
 			},
 			body: JSON.stringify({
 				model: "gpt-4.1-nano",
-				prompt: `Find Bible verses that align with the following text. strictly find the verses from the bible alone, no other source. Give me the verse and the text. e.g. John 3:16 For God so loved the world that he gave his only begotten son that whosoever believes in him should not perish but have everlasting life.: \"${text}\"`,
+				prompt: `Given the following text, find Bible verses that align with its meaning. Only provide verses from the Bible, formatted as "Book Chapter:Verse - Verse text". For example: "John 3:16 - For God so loved the world that he gave his only begotten Son, that whosoever believeth in him should not perish, but have everlasting life." Text: "${text}"`,
 				max_tokens: 200,
 			}),
 		});
