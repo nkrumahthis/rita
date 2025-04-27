@@ -39,7 +39,7 @@ export async function transcribe(audioBlob: Blob) {
 	}
 }
 
-export async function findBibleVerses(text: string) {
+export async function findBibleVerses(text: string): Promise<string[] | null> {
 	try {
 		if (!text) {
 			console.error("Text is required to find Bible verses");
@@ -60,8 +60,8 @@ export async function findBibleVerses(text: string) {
 			},
 			body: JSON.stringify({
 				model: "gpt-4.1-nano",
-				prompt: `Given the following text, find Bible verses that align with its meaning. Only provide verses from the Bible, formatted as "Book Chapter:Verse - Verse text". For example: "John 3:16 - For God so loved the world that he gave his only begotten Son, that whosoever believeth in him should not perish, but have everlasting life." Text: "${text}"`,
-				max_tokens: 200,
+				prompt: `Given the following text, find Bible verses that align with its meaning. Only provide verses from the Bible separated by the | symbol, formatted as "Book Chapter:Verse - Verse text | Book Chapter:Verse - Verse text | Book Chapter:Verse - Verse text". For example: "John 8:36 - If the Son therefore shall make you free, ye shall be free indeed. | 2 Corinthians 3:17 - Now the Lord is that Spirit: and where the Spirit of the Lord | Luke 10:19 - Behold, I give unto you power to tread on serpents and scorpions, and over all the power of the enemy: and nothing shall by any means hurt you." Text: "${text}"`,
+				max_tokens: 300,
 			}),
 		});
 
@@ -72,7 +72,11 @@ export async function findBibleVerses(text: string) {
 
 		const data = await response.json();
 		console.log("Bible verses response:", data);
-		return data.choices[0]?.text.trim();
+		let answer = data.choices[0]?.text.trim();
+
+		if (answer.includes("Answer:")) answer = answer.split("Answer:")[1].trim();
+
+		return answer.split("|");
 	} catch (error) {
 		console.error("Error finding Bible verses:", error);
 		return null;

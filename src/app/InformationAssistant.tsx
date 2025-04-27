@@ -3,19 +3,18 @@
 import React, { useState, useRef } from 'react';
 import { transcribe, findBibleVerses } from './action';
 import RecorderControls from './RecorderControls';
-import AudioPlayer from './AudioPlayer';
 import TranscriptionDisplay from './TranscriptionDisplay';
 import BibleVersesDisplay from './BibleVersesDisplay';
 
 const InformationAssistant: React.FC = () => {
   const [isRecording, setIsRecording] = useState(false);
-  const [audioURL, setAudioURL] = useState<string | null>(null);
   const [transcription, setTranscription] = useState<string | null>(null);
-  const [bibleVerses, setBibleVerses] = useState<string | null>(null);
+  const [bibleVerses, setBibleVerses] = useState<string[] | null>(null);
   const [isTranscribing, setIsTranscribing] = useState(false);
   const [isFindingVerses, setIsFindingVerses] = useState(false);
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const audioChunksRef = useRef<Blob[]>([]);
+
 
   const startRecording = async () => {
     try {
@@ -28,7 +27,6 @@ const InformationAssistant: React.FC = () => {
 
       mediaRecorder.onstop = async () => {
         const audioBlob = new Blob(audioChunksRef.current, { type: 'audio/wav' });
-        setAudioURL(URL.createObjectURL(audioBlob));
         audioChunksRef.current = [];
 
         setIsTranscribing(true);
@@ -87,7 +85,11 @@ const InformationAssistant: React.FC = () => {
         stopRecording={stopRecording}
       />
       {/* {audioURL && <AudioPlayer audioURL={audioURL} />} */}
-      {transcription && <TranscriptionDisplay transcription={transcription} />}
+      {transcription && (
+        <TranscriptionDisplay
+          transcription={transcription}
+        />
+      )}
       {bibleVerses && <BibleVersesDisplay bibleVerses={bibleVerses} />}
     </div>
   );
