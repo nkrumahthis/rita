@@ -6,7 +6,7 @@ import RecorderControls from './RecorderControls';
 import TranscriptionDisplay from './TranscriptionDisplay';
 import BibleVersesDisplay from './BibleVersesDisplay';
 
-const InformationAssistant: React.FC = () => {
+const BibleVerseFinder: React.FC = () => {
   const [isRecording, setIsRecording] = useState(false);
   const [transcription, setTranscription] = useState<string | null>(null);
   const [bibleVerses, setBibleVerses] = useState<string[] | null>(null);
@@ -95,4 +95,4 @@ const InformationAssistant: React.FC = () => {
   );
 };
 
-export default InformationAssistant;
+export default BibleVerseFinder;

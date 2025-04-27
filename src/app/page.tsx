@@ -1,4 +1,4 @@
-import InformationAssistant from "./InformationAssistant";
+import BibleVerseFinder from "./BibleVerseFinder";
 
 export default function Home() {
   return (
@@ -16,11 +16,11 @@ export default function Home() {
             Click the button below to start recording your voice.
           </p>
           <p className="text-sm text-gray-300">
-            Press and hold the space bar to record your voice. Release it to stop recording.
+            On a computer, press and hold the space bar to record your voice. Release it to stop recording.
           </p>
         </div>
         <div className="w-full">
-          <InformationAssistant />
+          <BibleVerseFinder />
         </div>
       </main>
     </div>
