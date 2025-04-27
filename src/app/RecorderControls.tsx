@@ -11,37 +11,37 @@ const RecorderControls: React.FC<RecorderControlsProps> = ({
   startRecording,
   stopRecording,
 }) => {
-    useEffect(() => {
-        const handleKeyDown = (event: KeyboardEvent) => {
-            if (event.code === 'Space') {
-                event.preventDefault();
-                if (!isRecording) {
-                    startRecording();
-                }
-            }
-        };
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.code === 'Space') {
+        event.preventDefault();
+        if (!isRecording) {
+          startRecording();
+        }
+      }
+    };
 
-        const handleKeyUp = (event: KeyboardEvent) => {
-            if (event.code === 'Space') {
-                event.preventDefault();
-                if (isRecording) {
-                    stopRecording();
-                }
-            }
-        };
+    const handleKeyUp = (event: KeyboardEvent) => {
+      if (event.code === 'Space') {
+        event.preventDefault();
+        if (isRecording) {
+          stopRecording();
+        }
+      }
+    };
 
-        window.addEventListener('keydown', handleKeyDown);
-        window.addEventListener('keyup', handleKeyUp);
-        return () => {
-            window.removeEventListener('keydown', handleKeyDown);
-            window.removeEventListener('keyup', handleKeyUp);
-        };
-    }, [isRecording, startRecording, stopRecording]);
+    window.addEventListener('keydown', handleKeyDown);
+    window.addEventListener('keyup', handleKeyUp);
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener('keyup', handleKeyUp);
+    };
+  }, [isRecording, startRecording, stopRecording]);
 
   return (
     <div className="flex justify-center">
       <button
-        className="px-4 py-2 rounded-full bg-red-500 hover:bg-red-600 text-white font-semibold transition-colors duration-200 flex items-center gap-2"
+        className="px-4 py-2 rounded-full bg-red-500 hover:bg-red-600 text-white font-semibold transition-colors duration-200 flex items-center gap-2 cursor-pointer"
         onClick={isRecording ? stopRecording : startRecording}
       >
         {isRecording ? (
